@@ -1,6 +1,6 @@
 {
     "name": "create-plugin-app",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "description": "Create Chrome Extension",
     "main": "index.js",
     "bin": {
@@ -23,6 +23,12 @@
         "log-symbols": "^4.1.0",
         "ora": "^5.4.1"
     },
-    "author": "",
-    "license": "MIT"
+    "author": "ruanxs",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Ruan8/create-plugin-app.git",
+        "directory": "packages/create-plugin-app"
+    },
+    "homepage": "https://github.com/Ruan8/create-plugin-app#readme"
 }
