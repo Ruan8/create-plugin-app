@@ -6,6 +6,7 @@ const ora = require("ora"); // 用于命令行上的加载效果
 const download = require("download-git-repo"); // 用于下载远程仓库至本地 支持GitHub、GitLab、Bitbucket
 const { exec, execSync } = require("child_process");
 const path = require("path");
+const _ = require("lodash");
 const fs = require("fs");
 const os = require("os");
 const spinner = ora();
@@ -38,6 +39,7 @@ commander
         process.exit();
       } else {
         await execSync(`rm -rf ${projectName}`);
+        console.log(chalk.green(`成功删除${projectName}文件夹`));
       }
     }
 
@@ -46,7 +48,7 @@ commander
         type: "list",
         name: "template",
         message: "请选择插件模板?",
-        choices: ["vue2"],
+        choices: ["vue2", "vue3"],
       },
     ]);
 
@@ -57,17 +59,20 @@ commander
 commander.version(require("../package.json").version).parse(process.argv);
 
 // 重写JSON项目
-function rewriteJSONFile(filePath, updateOpt) {
+function rewriteFile(filePath, update, source) {
   const fileBuffer = fs.readFileSync(filePath);
-  const targetContent = fileBuffer.toString();
+  const sourceContent = fileBuffer.toString();
   const isJson = path.extname(filePath) === ".json";
 
   if (isJson) {
-    const targetJson = JSON.parse(targetContent);
+    const sourceJson = JSON.parse(sourceContent);
     fs.writeFileSync(
       filePath,
-      JSON.stringify({ ...targetJson, ...updateOpt }, null, 2) + os.EOL
+      JSON.stringify(_.merge(sourceJson, update), null, 2) + os.EOL
     );
+  } else {
+    const modifiedContent = sourceContent.replace(source || "", update);
+    fs.writeFileSync(filePath, modifiedContent + os.EOL);
   }
 }
 
@@ -84,17 +89,21 @@ async function generate(projectName, templateName) {
       if (err) {
         spinner.fail("下载失败");
       } else {
-        init(projectName);
+        init(projectName, templateName);
       }
     }
   );
 }
 
 // 初始化项目
-async function init(projectName) {
+async function init(projectName, templateName) {
   process.chdir(projectName);
-  rewriteJSONFile("./manifest.json", { name: projectName });
-  rewriteJSONFile("./package.json", { name: projectName });
+  rewriteFile("./manifest.json", {
+    name: projectName,
+    browser_action: { default_title: projectName },
+  });
+  rewriteFile("./package.json", { name: projectName });
+  rewriteFile("./README.md", projectName, templateName);
   spinner.text = "正在安装依赖...";
   exec("npm install", (error, stdout, stderr) => {
     if (error) {
@@ -102,5 +111,12 @@ async function init(projectName) {
       return;
     }
     spinner.succeed("项目创建成功");
+
+    console.log();
+    console.log("  启动开发服务");
+    console.log();
+    console.log(chalk.cyan(`  cd ${projectName}`));
+    console.log(chalk.cyan(`  npm run serve`));
+    console.log();
   });
 }
