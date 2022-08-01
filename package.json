@@ -1,6 +1,6 @@
 {
     "name": "create-plugin-app",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Create Chrome Extension",
     "main": "index.js",
     "bin": {

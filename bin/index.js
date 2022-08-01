@@ -58,7 +58,7 @@ commander
 
 commander.version(require("../package.json").version).parse(process.argv);
 
-// 重写JSON项目
+// 重写文件
 function rewriteFile(filePath, update, source) {
   const fileBuffer = fs.readFileSync(filePath);
   const sourceContent = fileBuffer.toString();
