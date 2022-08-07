@@ -1,16 +1,14 @@
 {
     "name": "create-plugin-app",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Create Chrome Extension",
     "main": "index.js",
     "bin": {
         "create-plugin-app": "./bin/index.js"
     },
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
     "keywords": [
         "Chrome Extension",
+        "crx",
         "extension",
         "plugin",
         "chrome"
@@ -29,7 +27,7 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/Ruan8/create-plugin-app.git",
-        "directory": "packages/create-plugin-app"
+        "directory": "Ruan8/create-plugin-app"
     },
     "homepage": "https://github.com/Ruan8/create-plugin-app#readme"
 }
